@@ -1,0 +1,18 @@
+﻿<Page
+    x:Class="frt.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:frt"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Button x:Name="btnselfile" Content="选择文件" Margin="1085,73,0,0" VerticalAlignment="Top" Width="120" Click="Btnselfile_Click"/>
+        <TextBox x:Name="txtfilename" HorizontalAlignment="Left" Height="35" Margin="215,70,0,0" Text="TextBox" VerticalAlignment="Top" Width="645"/>
+        <TextBox HorizontalAlignment="Left" BorderThickness="0" Margin="88,74,0,0" Text="选择文件" VerticalAlignment="Top"/>
+        <Button x:Name="btndisplay" Content="显示" Margin="1095,480,0,0" VerticalAlignment="Top" Width="90" Click="Btndisplay_Click"/>
+
+    </Grid>
+</Page>
