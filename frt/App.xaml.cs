@@ -28,11 +28,15 @@ namespace frt
         /// </summary>
         /// 
         public string maintxt;
+        public int readbite=0;
+        public int readmode=0;
+        public int fontsize=0;
 
         public App()
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
         }
 
         /// <summary>
@@ -40,6 +44,8 @@ namespace frt
         /// 将在启动应用程序以打开特定文件等情况下使用。
         /// </summary>
         /// <param name="e">有关启动请求和过程的详细信息。</param>
+        /// 
+
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;

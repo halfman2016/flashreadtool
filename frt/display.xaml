@@ -9,8 +9,11 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Loaded="Page_Loaded">
 
     <Grid>
-        <Button x:Name="btnback" Content="Button" Margin="1170,25,0,0" VerticalAlignment="Top" Click="Button_Click"/>
-        <TextBox x:Name="txtdisplay" HorizontalAlignment="Left" Margin="215,65,0,0" Text="TextBox" VerticalAlignment="Top" Height="185" Width="855"/>
+        <Button x:Name="btnback" Content="返回" Margin="1117,18,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+        <ScrollViewer Margin="0,50,0,3">
+            <TextBlock Name="txtdisplay" Margin="0,50,0,3" />
+</ScrollViewer>
+
 
     </Grid>
 </Page>

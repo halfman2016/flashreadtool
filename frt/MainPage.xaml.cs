@@ -26,16 +26,28 @@ namespace frt
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        public int readbite = 0;
+        public int readmode = 0;
+        public int fontsize = 0;
+
         public MainPage()
         {
+
             this.InitializeComponent();
         }
 
-      
+
 
         private void Btndisplay_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(display));
+            if (readbite * readmode * fontsize > 0)
+            {
+                (Application.Current as App).readmode = readmode;
+                (Application.Current as App).readbite = readbite;
+                (Application.Current as App).fontsize = fontsize;
+
+                this.Frame.Navigate(typeof(display));
+            }
         }
 
 
@@ -48,11 +60,6 @@ namespace frt
             }
             catch (ArgumentOutOfRangeException)
             {
-                //using(var stream =new StreamReader((await file.OpenReadAsync()).GetInputStreamAt(0).AsStreamForRead()))
-                //{
-                //    string text = stream.ReadToEnd();
-                //    return text;
-                //}
 
 
                 IBuffer buffer = await FileIO.ReadBufferAsync(file);
@@ -115,7 +122,84 @@ namespace frt
 
             return;
         }
-    }
 
+
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            switch ((sender as RadioButton).Content as string)
+            {
+                case "小":
+                    fontsize = 12;
+                    break;
+                case "中":
+                    fontsize = 18;
+
+                    break;
+                case "大":
+                    fontsize = 30;
+
+                    break;
+                case "超大":
+                    fontsize = 45;
+                    break;
+            }
+
+        }
+
+        private void RadioButton_Checked_1(object sender, RoutedEventArgs e)
+        {
+            switch ((sender as RadioButton).Content as string)
+            {
+                case "60拍":
+                    readbite = 60;
+                    break;
+                case "90拍":
+                    readbite = 90;
+
+                    break;
+                case "120拍":
+                    readbite = 120;
+
+                    break;
+                case "180拍":
+                    readbite = 180;
+                    break;
+            }
+        }
+
+        private void RadioButton_Checked_2(object sender, RoutedEventArgs e)
+        {
+            switch ((sender as RadioButton).Content as string)
+            {
+                case "三目一行":
+                    readmode = 3;
+                    break;
+                case "两目一行":
+                    readmode = 5;
+
+                    break;
+                case "一目一行":
+                    readmode = 10;
+
+                    break;
+                case "一目两行":
+                    readmode = 20;
+                    break;
+            }
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (((Application.Current as App).readmode * (Application.Current as App).readbite * (Application.Current as App).fontsize) > 0)
+            {
+                readmode = (Application.Current as App).readmode;
+                readbite = (Application.Current as App).readbite;
+                fontsize = (Application.Current as App).fontsize;
+            }
+
+        }
+
+    }
 
 }
