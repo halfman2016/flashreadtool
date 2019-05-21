@@ -27,7 +27,7 @@ namespace frt
         /// 已执行，逻辑上等同于 main() 或 WinMain()。
         /// </summary>
         /// 
-        public string maintxt;
+        public string maintxt="";
         public int readbite=0;
         public int readmode=0;
         public int fontsize=0;
