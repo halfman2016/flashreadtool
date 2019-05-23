@@ -29,6 +29,7 @@ namespace frt
         public int readbite = 0;
         public int readmode = 0;
         public int fontsize = 0;
+        public int i = 0;
 
         public MainPage()
         {
@@ -40,7 +41,8 @@ namespace frt
 
         private void Btndisplay_Click(object sender, RoutedEventArgs e)
         {
-            if (readbite * readmode * fontsize > 0)
+            long tmp = readbite * readmode * fontsize;
+            if (tmp != 0)
             {
                 (Application.Current as App).readmode = readmode;
                 (Application.Current as App).readbite = readbite;
@@ -124,7 +126,72 @@ namespace frt
         }
 
 
+        private void setvalue() {
+            foreach (RadioButton rb in panreadbite.Children)
+                {
+                switch (rb.Content as string)
+                {
+                    case "60拍":
+                        if ((App.Current as App).readbite == 10000000) rb.IsChecked = true;
+                        break;
+                    case "90拍":
+                        if ((App.Current as App).readbite == 6666666) rb.IsChecked = true;
 
+                        break;
+                    case "120拍":
+                        if ((App.Current as App).readbite == 5000000) rb.IsChecked = true;
+
+                        break;
+                    case "180拍":
+                        if ((App.Current as App).readbite == 3333333) rb.IsChecked = true;
+                        break;
+                }
+
+            }
+            foreach (RadioButton rb in panreadsize.Children)
+            {
+                
+                switch (rb.Content as string)
+                {
+                    case "小":
+                        if ((App.Current as App).fontsize == 12) rb.IsChecked=true;
+                        break;
+                    case "中":
+                        if ((App.Current as App).fontsize == 18) rb.IsChecked = true;
+
+                        break;
+                    case "大":
+                        if ((App.Current as App).fontsize == 30) rb.IsChecked = true;
+
+                        break;
+                    case "超大":
+                        if ((App.Current as App).fontsize == 45) rb.IsChecked = true;
+                        break;
+                }
+                              
+            }
+            foreach (RadioButton rb in panreadmode.Children)
+            {
+                switch (rb.Content as string)
+                {
+                    case "三目一行":
+                        if ((App.Current as App).readmode == 3) rb.IsChecked = true;
+                        break;
+                    case "两目一行":
+                        if ((App.Current as App).readmode == 5) rb.IsChecked = true;
+
+                        break;
+                    case "一目一行":
+                        if ((App.Current as App).readmode == 10) rb.IsChecked = true;
+
+                        break;
+                    case "一目两行":
+                        if ((App.Current as App).readmode == 20) rb.IsChecked = true;
+                        break;
+                }
+
+            }
+        }
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             switch ((sender as RadioButton).Content as string)
@@ -152,18 +219,18 @@ namespace frt
             switch ((sender as RadioButton).Content as string)
             {
                 case "60拍":
-                    readbite = 60;
+                    readbite = 10000000;
                     break;
                 case "90拍":
-                    readbite = 90;
+                    readbite = 6666666;
 
                     break;
                 case "120拍":
-                    readbite = 120;
+                    readbite = 5000000;
 
                     break;
                 case "180拍":
-                    readbite = 180;
+                    readbite = 3333333;
                     break;
             }
         }
@@ -196,10 +263,13 @@ namespace frt
                 readmode = (Application.Current as App).readmode;
                 readbite = (Application.Current as App).readbite;
                 fontsize = (Application.Current as App).fontsize;
+
+                setvalue();
             }
 
         }
 
+       
     }
 
 }

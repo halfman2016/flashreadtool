@@ -10,9 +10,10 @@
 
     <Grid>
         <Button x:Name="btnback" Content="返回" Margin="1117,18,0,0" VerticalAlignment="Top" Click="Button_Click"/>
-        <ScrollViewer Margin="0,50,0,3">
+        <ScrollViewer x:Name="scroll1" Margin="0,50,0,3" >
             <TextBlock Name="txtdisplay" Margin="0,50,0,3" />
-</ScrollViewer>
+
+        </ScrollViewer>
 
 
     </Grid>

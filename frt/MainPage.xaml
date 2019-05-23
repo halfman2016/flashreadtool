@@ -8,31 +8,36 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Loaded="Page_Loaded" Width="1280" Height="720">
 
-    <Grid>
+    <Grid >
         <Button x:Name="btnselfile" Content="选择文件" Margin="1085,73,0,0" VerticalAlignment="Top" Width="120" Click="Btnselfile_Click"/>
         <TextBox x:Name="txtfilename" HorizontalAlignment="Left" Height="35" Margin="215,70,0,0" Text="" VerticalAlignment="Top" Width="645"/>
         <TextBox HorizontalAlignment="Left" BorderThickness="0" Margin="88,74,0,0" Text="选择文件" VerticalAlignment="Top"/>
         <Button x:Name="btndisplay" Content="显示" Margin="1095,480,0,0" VerticalAlignment="Top" Width="90" Click="Btndisplay_Click"/>
         <StackPanel Margin="175,180,965,220">
+        <StackPanel x:Name="panreadsize" >
             <RadioButton GroupName="fontsize"  Content="小" Checked="RadioButton_Checked"/>
             <RadioButton GroupName="fontsize"  Content="中" IsChecked="True" Checked="RadioButton_Checked"/>
             <RadioButton GroupName="fontsize"  Content="大" Checked="RadioButton_Checked"/>
             <RadioButton GroupName="fontsize" Content="超大" Checked="RadioButton_Checked"/>
+        </StackPanel>
             <TextBox  Text="字体大小" BorderThickness="0,0,0,0" Width="90" />
         </StackPanel>
         <StackPanel Margin="425,175,715,225">
+        <StackPanel x:Name="panreadbite" >
             <RadioButton GroupName="readbite" Content="60拍" IsChecked="True" Checked="RadioButton_Checked_1"/>
             <RadioButton GroupName="readbite" Content="90拍"  Checked="RadioButton_Checked_1"/>
             <RadioButton GroupName="readbite" Content="120拍" Checked="RadioButton_Checked_1"/>
             <RadioButton  GroupName="readbite" Content="180拍" Checked="RadioButton_Checked_1"/>
-            <TextBox  Text="阅读节奏" BorderThickness="0,0,0,0" Width="90" />
         </StackPanel>
-        
+         <TextBox  Text="阅读节奏" BorderThickness="0,0,0,0" Width="90" />
+
+        </StackPanel>
         <StackPanel Margin="675,170,465,230">
+        <StackPanel x:Name="panreadmode" >
             <RadioButton Content="三目一行" GroupName="readmode" Checked="RadioButton_Checked_2"/>
             <RadioButton Content="两目一行" GroupName="readmode" IsChecked="True" Checked="RadioButton_Checked_2"/>
             <RadioButton  GroupName="readmode" Content="一目一行" Checked="RadioButton_Checked_2"/>
-            <RadioButton  GroupName="readmode" Content="一目两行" Checked="RadioButton_Checked_2"/>
+            <RadioButton  GroupName="readmode" Content="一目两行" Checked="RadioButton_Checked_2"/></StackPanel>
             <TextBox  Text="阅读方式" BorderThickness="0,0,0,0" Width="90" />
         </StackPanel>
         
