@@ -38,10 +38,13 @@ namespace frt
         int readbite;
         int readmode;
         int bitetimes = 0;
+        int biteinline=0;
         string before;
         string currentline;
         string currentline2;
         string after;
+        int a1 = 0, a2 = 0, a3 = 0;
+        int b1 = 0, b2 = 0;
         List<string> lines = new List<string>();
 #pragma warning restore CS0414 // 字段“display.isshow”已被赋值，但从未使用过它的值
 
@@ -63,48 +66,67 @@ namespace frt
             tlength = txtdis.Length;
             readbite = (App.Current as App).readbite;
             readmode = (App.Current as App).readmode;
-            //switch (readmode)
-            //{
-            //    case 20:
-            //        break;
-            //    case 
-            //}
             txtdisplay.TextWrapping = TextWrapping.Wrap;
             txtdisplay.FontSize = (App.Current as App).fontsize;
 
-            char[] ss = new char[5];
-            ss[0] = 'q';
+           
         }
 
         private void Timer_Tick(object sender, object e)
         {
-            //if ((bitetimes+1) * linewidth < tlength)
-            //{
-            //    if (bitetimes == 0)
-            //    { before = "";
-            //    }
-            //    else
-            //    {
-            //        currentline = lines.ElementAt(bitetimes);
-            //        after = txtdis.Substring((bitetimes + 1) * linewidth);
-            //        textdisplyonce(before, currentline, after);
+            SolidColorBrush myBrush = new SolidColorBrush(Colors.Red);
 
-            //        //TextPointer tps = TextPointer(bitetimes * linewidth, 1);
-
-            //        //txtdisplay.Select(bitetimes * linewidth, bitetimes * linewidth + linewidth);
-            //        scroll1.ChangeView(null, txtdisplay.FontSize * bitetimes, null);
-
-            //    }
-            //    bitetimes++;
-
-
-            //}
-            if (bitetimes < txtdisplay.Inlines.Count) {
-                SolidColorBrush myBrush = new SolidColorBrush(Colors.Red);
-                (txtdisplay.Inlines.ElementAt(bitetimes) as  Run).Foreground=myBrush;
-                scroll1.ChangeView(null, txtdisplay.FontSize * bitetimes, null);
-                bitetimes++;
+            //3 5 10 20
+            switch (readmode)
+            {
+               case  3:
+                    a1 = a2 = linewidth / 3;
+                    a3 = linewidth - 2 * a1;
+                    //biteinline 0 1 2 循环
+                    Run run = (txtdisplay.Inlines.ElementAt(bitetimes) as Run);
+                    run.Text
+                    if (biteinline > 2) biteinline = 0;
+                    switch (biteinline)
+                    {
+                    case 0:
+                    //(txtdisplay.Inlines.ElementAt(bitetimes) as Run).Foreground = myBrush;
+                    break;
+                    case 1:
+                            break;
+                    case 2:
+                            break;
             }
+
+
+
+                    break;
+                case 5:
+                    b1 = linewidth / 2;
+                    b2 = linewidth - b1;
+                break;
+                case 10:
+
+                    if (bitetimes < txtdisplay.Inlines.Count)
+                    {
+                        
+                        //分模式渲染
+                        
+                        scroll1.ChangeView(null, txtdisplay.FontSize * bitetimes, null);
+                        bitetimes++;
+                    }
+
+
+                    break;
+                case 20:
+
+
+                    break;
+
+             }
+           
+
+
+            
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -114,8 +136,11 @@ namespace frt
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            linewidth = (int)(1278 / (App.Current as App).fontsize);
+            
+           
+            
 
+            linewidth = (int)(1278 / (App.Current as App).fontsize);
             char[] tmpstr = new char[linewidth];
             int inlinesign = 0;
             txtdisplay.Inlines.Clear();
