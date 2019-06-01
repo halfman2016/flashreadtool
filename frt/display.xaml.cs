@@ -38,20 +38,25 @@ namespace frt
         int readbite;
         int readmode;
         int bitetimes = 0;
+        int scrolltimes = 0;
         int biteinline=0;
         string before;
+        char[] tmpstr;
         string currentline;
         string currentline2;
         string after;
-        int a1 = 0, a2 = 0, a3 = 0;
-        int b1 = 0, b2 = 0;
+        int[] a = new int[3];
+        int[] b = new int[2];
         List<string> lines = new List<string>();
+
+        InlineCollection inlines;
+       
 #pragma warning restore CS0414 // 字段“display.isshow”已被赋值，但从未使用过它的值
 
         public display()
         {
             this.InitializeComponent();
-                      
+          //初始化 测试文本            
             if ((App.Current as App).maintxt=="")
             
             {
@@ -67,6 +72,7 @@ namespace frt
             readbite = (App.Current as App).readbite;
             readmode = (App.Current as App).readmode;
             txtdisplay.TextWrapping = TextWrapping.Wrap;
+            //设置字体
             txtdisplay.FontSize = (App.Current as App).fontsize;
 
            
@@ -74,59 +80,63 @@ namespace frt
 
         private void Timer_Tick(object sender, object e)
         {
-            SolidColorBrush myBrush = new SolidColorBrush(Colors.Red);
+            
 
-            //3 5 10 20
-            switch (readmode)
+            if (bitetimes < txtdisplay.Inlines.Count)
             {
-               case  3:
-                    a1 = a2 = linewidth / 3;
-                    a3 = linewidth - 2 * a1;
-                    //biteinline 0 1 2 循环
-                    Run run = (txtdisplay.Inlines.ElementAt(bitetimes) as Run);
-                    run.Text
-                    if (biteinline > 2) biteinline = 0;
-                    switch (biteinline)
+                //mode hang
+                //分模式渲染
+                if (readmode == 20)
+                {
+                    //跳行 一次跑两行
+                    SolidColorBrush myBrush = new SolidColorBrush(Colors.Red);
+
+                    (txtdisplay.Inlines.ElementAt(bitetimes) as Run).Foreground = myBrush;
+                    if (bitetimes + 1 < txtdisplay.Inlines.Count)
                     {
-                    case 0:
-                    //(txtdisplay.Inlines.ElementAt(bitetimes) as Run).Foreground = myBrush;
-                    break;
-                    case 1:
-                            break;
-                    case 2:
-                            break;
+                        (txtdisplay.Inlines.ElementAt(bitetimes+1) as Run).Foreground = myBrush;
+                         string var = (txtdisplay.Inlines.ElementAt(bitetimes) as Run).Text;
+                    int a = Convert.ToInt16((txtdisplay.Inlines.ElementAt(bitetimes) as Run).Text.Contains("\r"));
+                    a = a + Convert.ToInt16((txtdisplay.Inlines.ElementAt(bitetimes + 1) as Run).Text.Contains("\r"));
+                    a = a + Convert.ToInt16(((txtdisplay.Inlines.ElementAt(bitetimes) as Run).Text == ""));
+                    a = a + Convert.ToInt16(((txtdisplay.Inlines.ElementAt(bitetimes + 1) as Run).Text == ""));
+                   
+                        scrolltimes=scrolltimes+a;
+                        scroll1.ChangeView(null, txtdisplay.FontSize * scrolltimes, null);
+                   
+
+
+                    } 
+
+                   
+
+                    bitetimes=bitetimes+2;
+
+                }
+                else
+                {
+                        //一次一个 run ，有换行时 ，挪游标
+                SolidColorBrush myBrush = new SolidColorBrush(Colors.Red);
+                (txtdisplay.Inlines.ElementAt(bitetimes) as Run).Foreground = myBrush;
+                string var = (txtdisplay.Inlines.ElementAt(bitetimes) as Run).Text;
+                if ((txtdisplay.Inlines.ElementAt(bitetimes) as Run).Text.Contains("\r")|| (txtdisplay.Inlines.ElementAt(bitetimes) as Run).Text=="")
+                    {
+                        scrolltimes=scrolltimes+1;
+                        scroll1.ChangeView(null, txtdisplay.FontSize * scrolltimes, null);
+                     }
+                
+                bitetimes++;
+
+            
+
+
+
+                }
+                
             }
 
 
 
-                    break;
-                case 5:
-                    b1 = linewidth / 2;
-                    b2 = linewidth - b1;
-                break;
-                case 10:
-
-                    if (bitetimes < txtdisplay.Inlines.Count)
-                    {
-                        
-                        //分模式渲染
-                        
-                        scroll1.ChangeView(null, txtdisplay.FontSize * bitetimes, null);
-                        bitetimes++;
-                    }
-
-
-                    break;
-                case 20:
-
-
-                    break;
-
-             }
-           
-
-
-            
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -136,73 +146,253 @@ namespace frt
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+
             
-           
             
+            //初始化 一行多少字，以及一行缓存的字符数组
 
             linewidth = (int)(1278 / (App.Current as App).fontsize);
-            char[] tmpstr = new char[linewidth];
-            int inlinesign = 0;
-            txtdisplay.Inlines.Clear();
-           
             
-            for (int i = 0; i < txtdis.Length; i++)
+            //行内标记，最大到线宽
+            int inlinesign = 0;
+            int inlinecount = 0;//行内计数 0 1 2 0 1
+            //显示初始化
+            txtdisplay.Inlines.Clear();
+           lines.Clear();
+            //3 5 10 20
+            
+            
+            switch (readmode)
             {
-                char tmpchar = txtdis.ElementAt(i);
+                case 3:
+                    a[0] = a[1] = linewidth / 3;
+                    a[2] = linewidth - 2 * a[0];
+                    tmpstr = new char[a[0]];
+                    break;
+                case 5:
+                    b[0] = linewidth / 2;
+                    b[1] = linewidth - b[0];
+                    tmpstr = new char[b[0]];
+                    break;
+                case 10:
 
-                if (tmpchar == '\r' || tmpchar == '\n')
-                {
-                    if (tmpchar == '\n' && txtdis.ElementAt(i - 1) == '\r' && i >= 1)
-                    {
-                        //删掉目前的 \n 进入下一个循环 啥也不用做，上一i做完了
+                    tmpstr = new char[linewidth];
+                    break;
+                case 20:
+                    tmpstr = new char[linewidth];
 
-                    }
-                    else
-                    {
-                        //新行,换行符
-                        Run run = new Run();
-                        lines.Add(new string(tmpstr));
-                        run.Text = lines.Last() + "\r";
-                        txtdisplay.Inlines.Add(run);
-                        inlinesign = 0;
-                        tmpstr = new char[linewidth];
+                    break;
+             }
+
+
+            //run的多少和bittime一致 ，2行除外
+
+
+    for (int i = 0; i < txtdis.Length; i++)
+    {
+        char tmpchar = txtdis.ElementAt(i);
+        switch (readmode)
+        {
+        case 3:
+                       //inlinecount 0 1 2
+        if (inlinecount > 2) inlinecount = 0;
+        if (i == 0) tmpstr = new char[a[0]];
+        if (tmpchar == '\r' || tmpchar == '\n')
+         {
+                            //遇到原本的换行符号
+                            if (tmpchar == '\n' && txtdis.ElementAt(i - 1) == '\r' && i >= 1)
+                            {
+                                //删掉目前的 \n 进入下一个循环 啥也不用做，上一i做完了
+                            }
+                            else
+                            {
+                                //新行加换行符
+                                if (tmpstr[0] != '\0')
+                                {
+                                    Run run = new Run();
+
+                                    lines.Add(new string(tmpstr));
+                                    run.Text = lines.Last() + "\r";
+                                    txtdisplay.Inlines.Add(run);
+                                    inlinesign = 0;
+                                    if (inlinecount == 2)
+                                    { tmpstr = new char[a[0]]; }
+                                    else
+                                    { tmpstr = new char[a[inlinecount + 1]]; }
+                                    inlinecount++;
+
+                                }
+                            }
+
+
+                        }
+                        else
+                        {
+                            //字符加入tmp 分模式加入3 5 切割行内，10 20 不用
+                            // run形成小段落
+
+                            if (inlinesign < a[inlinecount])
+                            {
+                                tmpstr[inlinesign] = tmpchar;
+                                inlinesign++;
+                            }
+                            else
+                            {
+                                //一行完成
+                                Run run = new Run();
+                                lines.Add(new string(tmpstr));
+                                if (inlinecount == 2)
+                                {
+                                    run.Text = lines.Last() + "\r";
+                                    tmpstr = new char[a[0]];
+                                    inlinesign = 0;
+                                }
+                                else
+                                {
+                                    run.Text = lines.Last();
+                                    tmpstr = new char[a[inlinecount+1]];
+                                }
+
+                                txtdisplay.Inlines.Add(run);
+                                inlinesign = 0;
+                                tmpstr[inlinesign] = tmpchar;
+                                inlinecount++;
+                            }
+                        }
+                        break;
+
+                    case 5:
+                        //inlinecount 0 1 
+                        if (inlinecount > 1) inlinecount = 0;
+                        if (i == 0) tmpstr = new char[b[0]];
+                        if (tmpchar == '\r' || tmpchar == '\n')
+                        {
+                            //遇到原本的换行符号
+                            if (tmpchar == '\n' && txtdis.ElementAt(i - 1) == '\r' && i >= 1)
+                            {
+                                //删掉目前的 \n 进入下一个循环 啥也不用做，上一i做完了
+                            }
+                            else
+                            {
+                                //新行加换行符
+                                if (tmpstr[0] != '\0')
+                                {
+                                    Run run = new Run();
+                                    lines.Add(new string(tmpstr));
+                                    run.Text = lines.Last() + "\r";
+                                    txtdisplay.Inlines.Add(run);
+                                    inlinesign = 0;
+                                    if (inlinecount == 1)
+                                    { tmpstr = new char[b[0]]; }
+                                    else
+                                    { tmpstr = new char[b[inlinecount + 1]]; }
+                                    inlinecount++;
+
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            //字符加入tmp 分模式加入3 5 切割行内，10 20 不用
+                            // run形成小段落
+
+                            if (inlinesign < b[inlinecount])
+                            {
+                                tmpstr[inlinesign] = tmpchar;
+                                inlinesign++;
+                            }
+                            else
+                            {
+                                //一行完成
+                                Run run = new Run();
+                                lines.Add(new string(tmpstr));
+                                if (inlinecount == 1)
+                                {
+                                    run.Text = lines.Last() + "\r";
+                                    tmpstr = new char[b[0]];
+                                    inlinesign = 0;
+                                }
+                                else
+                                {
+                                    run.Text = lines.Last();
+                                    tmpstr = new char[b[inlinecount + 1]];
+                                }
+
+                                txtdisplay.Inlines.Add(run);
+                                inlinesign = 0;
+                                tmpstr[inlinesign] = tmpchar;
+                                inlinecount++;
+                            }
+                        }
+
+                        break;
+                    case 10: case 20:
+                        //inlinecount 不需要
                         
-                    }
+                        if (i == 0) tmpstr = new char[linewidth];
+                        if (tmpchar == '\r' || tmpchar == '\n')
+                        {
+                            //遇到原本的换行符号
+                            if (tmpchar == '\n' && txtdis.ElementAt(i - 1) == '\r' && i >= 1)
+                            {
+                                //删掉目前的 \n 进入下一个循环 啥也不用做，上一i做完了
+                            }
+                            else
+                            {
+                                //新行加换行符
+                                if (tmpstr[0] != '\0')
+                                {
+                                    Run run = new Run();
+                                    lines.Add(new string(tmpstr));
+                                    run.Text = lines.Last() + "\r";
+                                    txtdisplay.Inlines.Add(run);
+                                    inlinesign = 0;
+                                    tmpstr = new char[linewidth];
+                                }
+                            }
 
+                        }
+                        else
+                        {
+                            //字符加入tmp 分模式加入3 5 切割行内，10 20 不用
+                            // run形成小段落
 
+                            if (inlinesign < linewidth)
+                            {
+                                tmpstr[inlinesign] = tmpchar;
+                                inlinesign++;
+                            }
+                            else
+                            {
+                                //一行完成
+                                Run run = new Run();
+                                lines.Add(new string(tmpstr));
+                                
+                                    run.Text = lines.Last() + "\r";
+                                    tmpstr = new char[linewidth];
+                                    inlinesign = 0;
+                                  
+                                txtdisplay.Inlines.Add(run);
+                                inlinesign = 0;
+                                tmpstr[inlinesign] = tmpchar;
+                                
+                            }
+                        }
+                        break;
+                    
                 }
-                else
-                {
-                    //字符加入tmp 
-                    if (inlinesign < linewidth)
-                    {
-                        tmpstr[inlinesign] = tmpchar;
-                        inlinesign++;
-                    }
-                    else
-                    {
-                        //一行完成
-                        Run run = new Run();
-                        lines.Add(new string(tmpstr));
-                        run.Text = lines.Last()+ "\r\n";
-                        txtdisplay.Inlines.Add(run);
-
-                        inlinesign = 0;
-                        tmpstr = new char[linewidth];
-                        tmpstr[inlinesign] = tmpchar;
-                    }
-                }
+                
             }
-
+             inlines = txtdisplay.Inlines;
 
             TimeTrigger hourlyTrigger = new TimeTrigger(60, false);
             timer = new DispatcherTimer();
             timer.Interval = new TimeSpan(readbite);
             timer.Tick += Timer_Tick;//每秒触发这个事件，以刷新指针
             timer.Start();
-
-
-
+           
+           
         }
        
     }
